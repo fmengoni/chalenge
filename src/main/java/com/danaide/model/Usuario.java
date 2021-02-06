@@ -1,12 +1,16 @@
 package com.danaide.model;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 @Entity
@@ -33,7 +37,11 @@ public class Usuario  implements Serializable{
 	
 	@Column(name="documento")
 	private String documento;
-
+	
+	@OneToMany
+	@JoinColumn(name = "idUsuario")
+	private List<Carrito> lsCarritos = new ArrayList<Carrito>();
+	
 	public Long getIdUsuario() {
 		return idUsuario;
 	}
@@ -72,6 +80,14 @@ public class Usuario  implements Serializable{
 
 	public void setUsername(String username) {
 		this.username = username;
+	}
+
+	public List<Carrito> getLsCarritos() {
+		return lsCarritos;
+	}
+
+	public void setLsCarritos(List<Carrito> lsCarritos) {
+		this.lsCarritos = lsCarritos;
 	}
 
 }

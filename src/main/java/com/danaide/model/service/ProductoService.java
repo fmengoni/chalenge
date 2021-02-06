@@ -1,6 +1,7 @@
 package com.danaide.model.service;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -16,6 +17,17 @@ public class ProductoService implements IProductoService {
 	@Override
 	public List<Producto> getProductos() {
 		return (List<Producto>) productoDao.findAll();
+	}
+
+	@Override
+	public List<Producto> findByDescripcionLike(String descripcion) {
+		return productoDao.findByDescripcionLike(descripcion);
+	}
+
+	@Override
+	public Producto findById(Long id) {
+		Optional<Producto> productoOptional = productoDao.findById(id);
+		return productoOptional.isPresent() ? productoOptional.get() : null; 
 	}
 
 }

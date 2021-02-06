@@ -1,12 +1,16 @@
 package com.danaide.model;
 
 import java.io.Serializable;
+import java.sql.Date;
 import java.util.Set;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
@@ -25,6 +29,16 @@ public class Carrito implements Serializable{
 	
 	@OneToMany(mappedBy = "carrito")
     Set<ItemCarrito> items;
+	
+	@Column
+	private String tipoCarrito;
+	
+	@Column
+	private String fecha;
+	
+	@ManyToOne
+	@JoinColumn(name = "idCarrito", insertable = false, updatable = false)
+	private Usuario usuario;
 
 	public Long getIdCarrito() {
 		return idCarrito;
@@ -40,5 +54,21 @@ public class Carrito implements Serializable{
 
 	public void setItems(Set<ItemCarrito> items) {
 		this.items = items;
+	}
+
+	public String getTipoCarrito() {
+		return tipoCarrito;
+	}
+
+	public void setTipoCarrito(String tipoCarrito) {
+		this.tipoCarrito = tipoCarrito;
+	}
+
+	public String getFecha() {
+		return fecha;
+	}
+
+	public void setFecha(String fecha) {
+		this.fecha = fecha;
 	}
 }
