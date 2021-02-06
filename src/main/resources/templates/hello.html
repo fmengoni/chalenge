@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org"
+      xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+    <head>
+        <title>Hello World!</title>
+    </head>
+    <body>
+        <h1 th:inline="text">Usuario: [[${#httpServletRequest.remoteUser}]]!</h1>
+        <div th:if="${#httpServletRequest.isUserInRole('ADMIN')}">
+		  	<a th:href="@{/newMeetup}">Nueva meetup</a>
+		</div>
+		<div th:if="${#httpServletRequest.isUserInRole('ADMIN') or #httpServletRequest.isUserInRole('FINAL')}">
+		  	<a th:href="@{/queryWeather}">Consultar temperatura por dia</a>
+		</div>
+        <form th:action="@{/logout}" method="post">
+            <input type="submit" value="Sign Out"/>
+        </form>
+    </body>
+</html>
