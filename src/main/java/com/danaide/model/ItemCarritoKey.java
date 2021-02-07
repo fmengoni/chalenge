@@ -17,6 +17,15 @@ public class ItemCarritoKey implements Serializable {
 
     @Column(name = "idCarrito")
     Long idCarrito;
+    
+    public ItemCarritoKey() {
+    	
+    }
+    
+    public ItemCarritoKey(Long idCarrito, Long idProducto) {
+    	this.idCarrito = idCarrito;
+    	this.idProducto = idProducto;
+    }
 
 	public Long getIdProducto() {
 		return idProducto;
@@ -64,13 +73,4 @@ public class ItemCarritoKey implements Serializable {
 			return false;
 		return true;
 	}
-}
-
-
-class CourseRatingKey {
-
-    
-
-    // standard constructors, getters, and setters
-    // hashcode and equals implementation
 }

@@ -38,9 +38,9 @@ public class Usuario  implements Serializable{
 	@Column(name="documento")
 	private String documento;
 	
-	@OneToMany
-	@JoinColumn(name = "idUsuario")
-	private List<Carrito> lsCarritos = new ArrayList<Carrito>();
+//	@OneToMany
+//	@JoinColumn(name = "idUsuario", insertable = false, updatable = false)
+//	private List<Carrito> lsCarritos = new ArrayList<Carrito>();
 	
 	public Long getIdUsuario() {
 		return idUsuario;
@@ -82,12 +82,12 @@ public class Usuario  implements Serializable{
 		this.username = username;
 	}
 
-	public List<Carrito> getLsCarritos() {
-		return lsCarritos;
-	}
-
-	public void setLsCarritos(List<Carrito> lsCarritos) {
-		this.lsCarritos = lsCarritos;
-	}
+//	public List<Carrito> getLsCarritos() {
+//		return lsCarritos;
+//	}
+//
+//	public void setLsCarritos(List<Carrito> lsCarritos) {
+//		this.lsCarritos = lsCarritos;
+//	}
 
 }

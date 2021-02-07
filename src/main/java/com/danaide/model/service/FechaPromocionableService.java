@@ -1,6 +1,8 @@
 package com.danaide.model.service;
 
+import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -16,6 +18,12 @@ public class FechaPromocionableService implements IFechaPromocionableService {
 	@Override
 	public List<FechaPromocionable> getFechasPromocionables() {
 		return (List<FechaPromocionable>) fechaPromocionableDao.findAll();
+	}
+
+	@Override
+	public FechaPromocionable findById(Date id) {
+		Optional<FechaPromocionable> oFechaPromocionable = fechaPromocionableDao.findById(id);
+		return oFechaPromocionable.isPresent() ? oFechaPromocionable.get() : null;
 	}
 
 }

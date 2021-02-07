@@ -1,6 +1,7 @@
 package com.danaide.model.service;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -16,6 +17,12 @@ public class UsuarioService implements IUsuarioService {
 	@Override
 	public List<Usuario> getUsuarios() {
 		return (List<Usuario>) usuarioDao.findAll();
+	}
+
+	@Override
+	public Usuario findById(Long idUsuario) {
+		Optional<Usuario> oUsuario = usuarioDao.findById(idUsuario);
+		return oUsuario.isPresent() ? oUsuario.get() : null;
 	}
 
 }

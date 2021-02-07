@@ -6,4 +6,7 @@ import com.danaide.model.Usuario;
 
 public interface IUsuarioService {
 	public List<Usuario> getUsuarios();
+	
+	public Usuario findById(Long idUsuario);
+	
 }
