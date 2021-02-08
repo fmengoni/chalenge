@@ -14,4 +14,6 @@ public interface ICarritoDao extends CrudRepository<Carrito, Long>{
 
 	List<Carrito> findByUsuarioAndFechaGreaterThanAndFechaCierreIsNotNull(Usuario usuario, Date fecha);
 
+	List<Carrito> findByUsuarioAndFechaLessThanAndFechaCierreIsNull(Usuario usuario, Date fecha);
+
 }

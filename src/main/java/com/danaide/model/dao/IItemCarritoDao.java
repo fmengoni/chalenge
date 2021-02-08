@@ -4,9 +4,8 @@ import java.util.List;
 
 import org.springframework.data.repository.CrudRepository;
 
-import com.danaide.model.ItemCarrito;
-import com.danaide.model.ItemCarritoKey;
+import com.danaide.model.CarritoItem;
 
-public interface IItemCarritoDao extends CrudRepository<ItemCarrito, ItemCarritoKey>{
-	public List<ItemCarrito> findByCarritoIdCarrito(Long idCarrito);
+public interface IItemCarritoDao extends CrudRepository<CarritoItem, Long>{
+	public List<CarritoItem> findByCarritoIdCarrito(Long idCarrito);
 }

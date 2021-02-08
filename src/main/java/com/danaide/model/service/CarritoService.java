@@ -12,9 +12,7 @@ import org.springframework.stereotype.Service;
 
 import com.danaide.model.Carrito;
 import com.danaide.model.FechaPromocionable;
-import com.danaide.model.ItemCarrito;
-import com.danaide.model.ItemCarritoKey;
-import com.danaide.model.Producto;
+import com.danaide.model.CarritoItem;
 import com.danaide.model.Usuario;
 import com.danaide.model.dao.ICarritoDao;
 
@@ -26,15 +24,19 @@ public class CarritoService implements ICarritoService {
 	private IFechaPromocionableService fechaPromocionableService;
 	@Autowired
 	private IItemCarritoService itemCarritoService;
-	@Autowired
-	private IProductoService productoService;
 
 	@Override
 	public void save(Carrito carrito) {
-		//Previo a insertar el carrito determinamos el tipo (VIP, PROMOCIONABLE, COMUN)
-//		carrito.setTipoCarrito(determinarTipoDeCarrito(carrito));
-		
+		cerrarCarritosIncompletos(carrito.getUsuario(), carrito.getFecha());
 		carritoDao.save(carrito);
+	}
+
+	private void cerrarCarritosIncompletos(Usuario usuario, Date fecha) {
+		List<Carrito> lsCarritos = carritoDao.findByUsuarioAndFechaLessThanAndFechaCierreIsNull(usuario, fecha);
+		for (Iterator<Carrito> iterator = lsCarritos.iterator(); iterator.hasNext();) {
+			Carrito carrito = iterator.next();
+			carritoDao.delete(carrito);
+		}
 	}
 
 	private String determinarTipoDeCarrito(Carrito carrito) {
@@ -64,8 +66,8 @@ public class CarritoService implements ICarritoService {
 		Double montoTotal = new Double(0);
 		for (Iterator<Carrito> iterator = lsCarritos.iterator(); iterator.hasNext();) {
 			Carrito xCarrito = iterator.next();
-			for (Iterator<ItemCarrito> iteratorItemCarrito = xCarrito.getItems().iterator(); iteratorItemCarrito.hasNext();) {
-				ItemCarrito itemCarrito = iteratorItemCarrito.next();
+			for (Iterator<CarritoItem> iteratorItemCarrito = xCarrito.getItems().iterator(); iteratorItemCarrito.hasNext();) {
+				CarritoItem itemCarrito = iteratorItemCarrito.next();
 				montoTotal += itemCarrito.getPrecioTotal();
 			}
 		}
@@ -94,14 +96,18 @@ public class CarritoService implements ICarritoService {
 	}
 
 	@Override
-	public void addItem(Long idCarrito, ItemCarrito itemCarrito) {
+	public void addItem(Long idCarrito, CarritoItem itemCarrito) throws Exception {
 		Carrito carrito = findById(idCarrito);
 		if(carrito != null) {
-			itemCarrito.setCarrito(carrito);
-			itemCarrito.setProducto(productoService.findById(itemCarrito.getId().getIdProducto()));
-			itemCarritoService.save(itemCarrito);
-			carrito.getItems().add(itemCarrito);
-			save(carrito);	
+			if(carrito.getFechaCierre() == null) {
+				itemCarritoService.save(itemCarrito);
+				carrito.getItems().add(itemCarrito);
+				save(carrito);		
+			} else {
+				throw new Exception("No se pueden agregar items a un carrito finalizado");
+			}
+		} else {
+			throw new Exception("El carrito con id " + idCarrito + " no existe");
 		}
 	}
 
@@ -117,5 +123,20 @@ public class CarritoService implements ICarritoService {
 		carrito.setFechaCierre(new Date());
 		
 		save(carrito);
+	}
+
+	@Override
+	public void delete(Long idCarrito) throws Exception {
+		Carrito carrito = findById(idCarrito);
+		if(carrito != null) {
+			carritoDao.delete(carrito);
+		} else {
+			throw new Exception("El carrito con id " + idCarrito + " no existe");
+		}
+	}
+
+	@Override
+	public void deleteItem(Long idCarrito, Long idItem) throws Exception {
+		itemCarritoService.deleteItem(idItem);
 	}
 }

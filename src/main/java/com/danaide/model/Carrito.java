@@ -8,6 +8,7 @@ import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -29,8 +30,8 @@ public class Carrito implements Serializable{
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private Long idCarrito;
 	
-	@OneToMany (mappedBy = "carrito")
-    private List<ItemCarrito> items;
+	@OneToMany (mappedBy = "carrito", fetch = FetchType.EAGER)
+    private List<CarritoItem> items;
 	
 	@Column
 	private String tipoCarrito;
@@ -54,14 +55,14 @@ public class Carrito implements Serializable{
 		this.idCarrito = idCarrito;
 	}
 
-	public List<ItemCarrito> getItems() {
+	public List<CarritoItem> getItems() {
 		if(items == null) {
-			items = new ArrayList<ItemCarrito>();
+			items = new ArrayList<CarritoItem>();
 		}
 		return items;
 	}
 
-	public void setItems(List<ItemCarrito> items) {
+	public void setItems(List<CarritoItem> items) {
 		this.items = items;
 	}
 
@@ -91,33 +92,41 @@ public class Carrito implements Serializable{
 	
 	public Double getPrecioTotal() {
 		Double precioTotal = new Double(0);
-		for (Iterator<ItemCarrito> iterator = items.iterator(); iterator.hasNext();) {
-			ItemCarrito itemCarrito = iterator.next();
+		for (Iterator<CarritoItem> iterator = items.iterator(); iterator.hasNext();) {
+			CarritoItem itemCarrito = iterator.next();
 			precioTotal += itemCarrito.getPrecioTotal();
+		}
+		if(fechaCierre != null) {
+			precioTotal = (precioTotal - getDescuento());
 		}
 		return precioTotal;
 	}
 
-	public Double getDescuento(Double precioTotal) {
+	public Double getDescuento() {
 		if(getItems().size()<5) {
-			return precioTotal;
+			return new Double(0);
 		} else {
-			switch (getTipoCarrito()) {
-			case "VIP":
-				return precioTotal - 700 - bonificacionProductoMasBarato();
-			case "PROMOCIONABLE":
-				return precioTotal - 500;
-			case "COMUN":
-				return precioTotal - 200;
+			try {
+				switch (getTipoCarrito()) {
+				case "VIP":
+					return new Double(700 - bonificacionProductoMasBarato());
+				case "PROMOCIONABLE":
+					return new Double(500);
+				case "COMUN":
+					return new Double(200);
+				default:
+					return new Double(0);
+				}
+			}catch (NullPointerException e) {
+				return new Double(0);	
 			}
 		}
-		return null;
 	}
 
 	private Double bonificacionProductoMasBarato() {
 		Double bonificacion = new Double(Double.MAX_VALUE);
-		for (Iterator<ItemCarrito> iterator = items.iterator(); iterator.hasNext();) {
-			ItemCarrito itemCarrito = iterator.next();
+		for (Iterator<CarritoItem> iterator = items.iterator(); iterator.hasNext();) {
+			CarritoItem itemCarrito = iterator.next();
 			if(itemCarrito.getPrecioTotal().compareTo(bonificacion) < 0) {
 				bonificacion = itemCarrito.getPrecioTotal();
 			}

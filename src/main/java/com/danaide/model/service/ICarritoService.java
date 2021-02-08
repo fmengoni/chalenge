@@ -4,7 +4,7 @@ import java.util.Date;
 import java.util.List;
 
 import com.danaide.model.Carrito;
-import com.danaide.model.ItemCarrito;
+import com.danaide.model.CarritoItem;
 import com.danaide.model.Usuario;
 
 public interface ICarritoService {
@@ -20,7 +20,11 @@ public interface ICarritoService {
 	
 	public List<Carrito> findByUsuarioAndFechaGreaterThanAndFechaCierreIsNotNull(Usuario usuario, Date fecha);
 
-	public void addItem(Long idCarrito, ItemCarrito item);
+	public void addItem(Long idCarrito, CarritoItem item) throws Exception;
+
+	public void delete(Long idCarrito) throws Exception;
+
+	public void deleteItem(Long idCarrito, Long idItem) throws Exception;
 	
 	
 }

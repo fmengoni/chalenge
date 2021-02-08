@@ -2,11 +2,14 @@ package com.danaide.model.service;
 
 import java.util.List;
 
-import com.danaide.model.ItemCarrito;
-import com.danaide.model.ItemCarritoKey;
+import com.danaide.model.CarritoItem;
 
 public interface IItemCarritoService {
-	public void save(ItemCarrito itemCarrito);
+	public CarritoItem findById(Long idItemCarrito);
 	
-	public List<ItemCarrito> findByCarritoIdCarrito(Long id);
+	public void save(CarritoItem itemCarrito);
+	
+	public List<CarritoItem> findByCarritoIdCarrito(Long id);
+
+	public void deleteItem(Long idItem) throws Exception;
 }
